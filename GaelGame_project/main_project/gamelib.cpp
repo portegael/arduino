@@ -53,6 +53,10 @@ void Game_Class::generate_sequence(int difficulty, int* sequence)
 {
   // Write a sequence and send it back
   
-  
+   int i = 0 ;
+
+  for (i=0; i < difficulty*10 ; i++ )
+    sequence[i] = random(1, 5) ;
+
 }
 

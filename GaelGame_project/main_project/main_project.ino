@@ -56,26 +56,6 @@ void show_difficulty() // Display a text to chosse the difficulty
   delay(1000) ;
 }
 
-void generate_sequence( long int tab_sequence[10] )
-{
-  int i = 0 ;
-
-  for (i=0; i < 10 ; i++ )
-    tab_sequence[i] = random(1, 5) ;
-
-}
-
-void reset_sequence( long int tab_sequence[10] )
-{
-  int i = 0 ;
-
-  for (i=0; i < 10 ; i++ )
-    tab_sequence[i] = 0 ;
-
-}
-
-
-
 // the setup routine runs once when you press reset:
 void setup() {                
   Serial.begin(9600) ;
@@ -101,8 +81,6 @@ void setup() {
   fdevopen( &my_putc, 0);
   randomSeed(analogRead(0)); // generate a pseudo-random number on an unconnected pin 
 
-  reset_sequence( tab_sequence_easy ) ;
-  generate_sequence( tab_sequence_easy ) ;
 
 }
 
@@ -142,13 +120,21 @@ void loop() {
 
   delay(2500) ;
 
+  // Generate a sequence depending on the difficulty level
+  int sequence[10 * btn_led_convert] ;
+  Game.generate_sequence(btn_led_convert, sequence) ;
+
+  for ( i = 0 ; i < btn_led_convert*10 ; i++ )
+    printf("sequence : [%d][%d]\n", i, sequence[i]) ;  
+
+
   /*
 
-  // for (i=0; i <10; i++ )
-  //   printf("tab_sequence_middle[%d] : %d\n", i, tab_sequence_middle[i]);
-  // printf("\n") ;
+   // for (i=0; i <10; i++ )
+   //   printf("tab_sequence_middle[%d] : %d\n", i, tab_sequence_middle[i]);
+   // printf("\n") ;
   /*
-  randNumber = random(1, 5);
+   randNumber = random(1, 5);
    Serial.println(randNumber);
    
    
@@ -166,6 +152,7 @@ void loop() {
    */
   delay(1000) ;
 }
+
 
 
 
