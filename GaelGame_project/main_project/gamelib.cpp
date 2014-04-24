@@ -98,8 +98,10 @@ void Game_Class::switch_on_led( int led )
   }
 
   delay(500) ;
+  reset_leds() ;
 
 }
+
 
 
 
