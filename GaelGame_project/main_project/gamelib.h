@@ -16,11 +16,21 @@ class Game_Class
 {
 public:
   Game_Class() ;
+  void reset_leds() ;
   int btn_to_led( int val_btn ) ; // Conversion from button pressed to LED (Obviously this is a virtual conversion)
   void generate_sequence(int difficulty, int* sequence) ;
+  void switch_on_led( int led ) ;
+
 private:
+
+  // Pin connected to the different leds
+  int led_A = 24; // Up
+  int led_B = 30; // Left
+  int led_C = 36; // Right
+  int led_D = 42; // Down
 
 };
 
 #endif
+
 

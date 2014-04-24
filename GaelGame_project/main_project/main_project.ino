@@ -13,11 +13,7 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 Game_Class Game ;
 
-// Pin connected to the different leds
-int led_A = 24; // Up
-int led_B = 30; // Left
-int led_C = 36; // Right
-int led_D = 42; // Down
+
 long randNumber;
 long int tab_sequence_easy[10] ;
 long int tab_sequence_middle[10] ;
@@ -28,13 +24,6 @@ int my_putc( char c, FILE *t) {
   Serial.write( c );
 }
 
-void reset_leds() // Switch off all the leds
-{
-  digitalWrite(led_A, LOW);
-  digitalWrite(led_B, LOW);  
-  digitalWrite(led_C, LOW);
-  digitalWrite(led_D, LOW);
-}
 
 void show_difficulty() // Display a text to chosse the difficulty
 {
@@ -59,11 +48,7 @@ void show_difficulty() // Display a text to chosse the difficulty
 // the setup routine runs once when you press reset:
 void setup() {                
   Serial.begin(9600) ;
-  // initialize the digital pin as an output.
-  pinMode(led_A, OUTPUT);     
-  pinMode(led_B, OUTPUT);     
-  pinMode(led_C, OUTPUT);     
-  pinMode(led_D, OUTPUT);
+
 
   pinMode(btn_lcd, INPUT) ;
 
@@ -95,7 +80,7 @@ void loop() {
 
   char level_msg[24] = "" ;
 
-  reset_leds() ;  
+  Game.reset_leds() ;  
 
   /* Diplay text to choose difficulty */
 
@@ -125,33 +110,16 @@ void loop() {
   Game.generate_sequence(btn_led_convert, sequence) ;
 
   for ( i = 0 ; i < btn_led_convert*10 ; i++ )
-    printf("sequence : [%d][%d]\n", i, sequence[i]) ;  
+    {
+      printf("sequence : [%d][%d]\n", i, sequence[i]) ;
+      Game.switch_on_led( sequence[i]) ; //sequence[i] ) ;
+    }
 
 
-  /*
-
-   // for (i=0; i <10; i++ )
-   //   printf("tab_sequence_middle[%d] : %d\n", i, tab_sequence_middle[i]);
-   // printf("\n") ;
-  /*
-   randNumber = random(1, 5);
-   Serial.println(randNumber);
-   
-   
-   if(randNumber == 1 )
-   digitalWrite(led_A, HIGH); 
-   else if (randNumber == 2 )
-   digitalWrite(led_B, HIGH);
-   else if (randNumber == 3 )
-   digitalWrite(led_C, HIGH);
-   else if (randNumber == 4 )
-   digitalWrite(led_D, HIGH);
-   else
-   reset_leds() ;
-   delay(500);
-   */
   delay(1000) ;
 }
+
+
 
 
 
