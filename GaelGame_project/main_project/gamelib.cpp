@@ -24,8 +24,8 @@ void Game_Class::reset_leds() // Switch off all the leds
 int Game_Class::btn_to_led( int val_btn ) // Conversion from button pressed to LED (Obviously this is a virtual conversion)
 {
 
-  int btn_led_convert = -1 ; 
-  int previous_btn = 0 ;
+  int btn_led_convert = -1; 
+  int previous_btn = 0;
 
   if ( val_btn == 0 ) // LED C
   {
