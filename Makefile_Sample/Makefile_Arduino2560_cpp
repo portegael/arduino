@@ -1,0 +1,41 @@
+# tools
+AVRDUDE=avrdude -F -V
+OBJCOPY=avr-objcopy
+CC=avr-g++
+RM=rm -f
+
+# parameters
+MCU=atmega2560
+F_CPU=16000000UL
+BIN_FORMAT=ihex
+PORT=/dev/ttyACM0
+BAUD=115200
+PROTOCOL=stk500v2
+PART=$(MCU)
+CFLAGS=-Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU)
+PROG=main
+SUDO=sudo
+
+.SUFFIXES: .elf .hex
+
+.cpp.elf:
+	$(CC) $(CFLAGS) -o $@ $<
+
+.elf.hex:
+	$(OBJCOPY) -O $(BIN_FORMAT) -R .eeprom $< $@
+
+.PHONY: all
+all: ${PROG}.hex
+
+${PROG}.hex: ${PROG}.elf
+
+${PROG}.elf: ${PROG}.cpp
+
+.PHONY: clean
+clean:
+	$(RM) ${PROG}.elf ${PROG}.hex
+
+.PHONY: upload
+upload: ${PROG}.hex
+	${SUDO} $(AVRDUDE) -c $(PROTOCOL) -p $(PART) -P $(PORT) \
+		-b $(BAUD) -U flash:w:${PROG}.hex
