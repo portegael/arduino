@@ -8,7 +8,7 @@ AVRDUDE=avrdude -F -V
 CFLAGS=-Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU)
 CPPFLAGS=$(INCLUDE) $(CFLAGS)
 
-LDFLAGS_XX= #-Wl,--gc-section
+LDFLAGS_XX= -Wl,--gc-section
 
 INCLUDE=-I/opt/arduino-1.6.8/hardware/tools/avr/avr/include -I/opt/arduino-1.6.8/hardware/arduino/avr/cores/arduino/
 BIN_FORMAT=ihex
@@ -26,41 +26,30 @@ PART=$(MCU)
 # Input / output files
 TARGET=detector
 
-SRC_FILES=main.cpp ledManager.cpp
+SRC_FILES=ledManager.cpp main.cpp
 
 OBJECT_FILES=$(SRC_FILES:.cpp=.o)
 
-detector: main.o ledManager.o
-	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) main.o ledManager.o -o detector
+$(TARGET): $(OBJECT_FILES)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) $(OBJECT_FILES) -o detector
 
-main.o: main.cpp
-	$(CXX) $(CPPFLAGS) main.cpp
-
-ledManager.o: ledManager.cpp
-	$(CXX) $(CPPFLAGS) ledManager.cpp -c
-
-%.hex: detector
+$(OBJECT_FILES):$(SRC_FILES)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) -c $^
+	
+%.hex: $(TARGET)
 	$(OBJCOPY) -O $(BIN_FORMAT) -R .eeprom $< $@
 
 # Commands
-RM = rm -f
-
+RM=rm -f
+SUDO=sudo
 .PHONY: all
 all: $(TARGET)
 
-#$(TARGET): $(OBJECT_FILES)
-#    $(CXX) $(LDFLAGS) $(OBJECTS) -o $@
-
-#.cpp.o :
-#    $(CXX) $(CPPFLAGS) $(OBJECT_FILES) $< -o $@
-
 .PHONY: upload
 upload: $(TARGET).hex
-	$(AVRDUDE) -c $(PROTOCOL) -p $(PART) -P $(PORT) -b $(BAUD) -U flash:w:$<
+	$(SUDO) $(AVRDUDE) -c $(PROTOCOL) -p $(PART) -P $(PORT) -b $(BAUD) -U flash:w:$<
 
 .PHONY: clean
 clean:
 	@echo "****** Clean ******"
-	$(RM) *.hex *.o *.obj
-
-
+	$(RM) *.hex *.o *.obj *.out $(TARGET)
