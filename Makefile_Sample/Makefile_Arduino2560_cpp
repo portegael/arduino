@@ -31,7 +31,7 @@ SRC_FILES=ledManager.cpp main.cpp
 OBJECT_FILES=$(SRC_FILES:.cpp=.o)
 
 $(TARGET): $(OBJECT_FILES)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) $(OBJECT_FILES) -o detector
+	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) $(OBJECT_FILES) -o $(TARGET)
 
 $(OBJECT_FILES):$(SRC_FILES)
 	$(CXX) $(CPPFLAGS) $(LDFLAGS_XX) -c $^
